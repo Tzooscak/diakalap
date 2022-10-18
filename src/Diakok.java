@@ -67,6 +67,11 @@ public class Diakok extends javax.swing.JFrame {
         jList2 = new javax.swing.JList<>();
         scrollPane1 = new java.awt.ScrollPane();
         list1 = new java.awt.List();
+        jTextField1 = new javax.swing.JTextField();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jFileChooser1 = new javax.swing.JFileChooser();
+        jSpinField1 = new com.toedter.components.JSpinField();
         jLabel1 = new javax.swing.JLabel();
         ForName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -86,7 +91,9 @@ public class Diakok extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         varosok = new javax.swing.JComboBox<>();
         szül = new com.toedter.calendar.JDateChooser();
-        alap = new javax.swing.JLabel();
+        button1 = new java.awt.Button();
+        label1 = new java.awt.Label();
+        varos = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,6 +121,12 @@ public class Diakok extends javax.swing.JFrame {
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane4.setViewportView(jList2);
+
+        jTextField1.setText("jTextField1");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane5.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -195,7 +208,14 @@ public class Diakok extends javax.swing.JFrame {
 
         varosok.setEditable(true);
 
-        alap.setText("Alap szöveg");
+        button1.setLabel("keres");
+        button1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                button1ActionPerformed(evt);
+            }
+        });
+
+        label1.setText("Város");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -240,16 +260,18 @@ public class Diakok extends javax.swing.JFrame {
                                     .addComponent(szül, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(130, 130, 130)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(10, 10, 10)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel1))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(alap)
-                        .addGap(174, 174, 174))))
+                                .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(varos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,7 +281,11 @@ public class Diakok extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(alap)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(varos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(36, 62, Short.MAX_VALUE)
@@ -402,35 +428,58 @@ public class Diakok extends javax.swing.JFrame {
     }//GEN-LAST:event_tablaKeyPressed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
-        int c= tabla.getSelectedRow();
-        int g= tabla.getSelectedColumn();
-        LocalDate localDate = LocalDate.now();
+
+        try{
+            Class.forName("com.mysql.jdbc.Driver");  
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
+            Statement smt=con.createStatement();
+            ResultSet result = smt.executeQuery("SELECT * FROM diak INNER JOIN varos ON diak.varosid = varos.vid WHERE diaksz = '"+tabla.getValueAt(tabla.getSelectedRow(), 1)+"'");
+            result.next();
+            
+            ForName.setText(result.getString("név"));
+            diaksz.setText(result.getString("diaksz"));
+            anyu.setText(result.getString("Anyuka"));
+            email.setText(result.getString("email"));
+            lak.setText(result.getString("Lakcim"));
+            szül.setDate(result.getDate("születés"));
+            varosok.setSelectedItem(result.getString("vnev"));
+        }
+        catch(Exception e){System.out.println(e);}
+        
+        /*LocalDate localDate = LocalDate.now();
         Date datum = null;
         datum= Date.valueOf(localDate);
-        szül.setDate(datum);
-        if (g==0){
-            alap.setText("Alap szöveg");
-            String n= (tabla.getValueAt(c, g)).toString();
-            String k= (tabla.getValueAt(c, g+1)).toString();
-            String m= (tabla.getValueAt(c, g+2)).toString();
-            String u= (tabla.getValueAt(c, g+3)).toString();
-            String i= (tabla.getValueAt(c, g+4)).toString();
-            String r= (tabla.getValueAt(c, g+5)).toString();
-            datum= Date.valueOf(r);
-            String b= (tabla.getValueAt(c, g+6)).toString();
-            ForName.setText(n);
-            diaksz.setText(k);
-            anyu.setText(m);
-            email.setText(u);
-            lak.setText(i);
-            szül.setDate(datum);         
-            varosok.setSelectedItem(b);
-        }
-        else{
-            alap.setText("Csak nevet változtathatsz!");
-            
-        }
+        szül.setDate(datum);*/
+        
     }//GEN-LAST:event_tablaMouseClicked
+
+    private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
+        Tablatorol(tabla);
+        String varoska = varos.getText();
+        try{
+            Class.forName("com.mysql.jdbc.Driver");  
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
+            Statement smt=con.createStatement();
+            ResultSet result = smt.executeQuery("SELECT * FROM diak INNER JOIN varos ON diak.varosid = varos.vid ");
+            DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+            String[] mezon = {"név","diaksz","Anyuka","email","Lakcim","születés","vnev"};
+            String[] rekord = new String[7];
+                while(result.next())
+                {
+                    if(varoska.equals(result.getString("vnev"))){
+                    for(int i=0;i<mezon.length;i++){
+                        rekord[i]=result.getString(mezon[i]);
+                    }
+                    model.addRow(rekord);
+                }else{
+                System.out.println("valami rosz");
+            }
+            }
+            
+            con.close();
+        }
+        catch(Exception e){System.out.println(e);}
+    }//GEN-LAST:event_button1ActionPerformed
     //tabla.addPropertyChangeListener("state", new PropertyChangeListener()) {
     
 
@@ -508,12 +557,13 @@ public class Diakok extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ForName;
-    private javax.swing.JLabel alap;
     private javax.swing.JTextField anyu;
+    private java.awt.Button button1;
     private javax.swing.JTextField diaksz;
     private javax.swing.JTextField email;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -529,12 +579,18 @@ public class Diakok extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private com.toedter.components.JSpinField jSpinField1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
+    private java.awt.Label label1;
     private javax.swing.JTextField lak;
     private java.awt.List list1;
     private java.awt.ScrollPane scrollPane1;
     private com.toedter.calendar.JDateChooser szül;
     private javax.swing.JTable tabla;
+    private javax.swing.JTextField varos;
     private javax.swing.JComboBox<String> varosok;
     // End of variables declaration//GEN-END:variables
 }
