@@ -108,6 +108,9 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="33" green="99" red="ff" type="rgb"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -141,6 +144,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jButton2" min="-2" pref="73" max="-2" attributes="0"/>
                                   <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="visz" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -257,7 +261,9 @@
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="visz" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -431,6 +437,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="varos">
+    </Component>
+    <Component class="javax.swing.JLabel" name="visz">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="VISZAJELZ&#xc9;S"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

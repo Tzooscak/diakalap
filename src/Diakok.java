@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener;
 import java.sql.DriverManager;
 import java.sql.*;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -94,6 +95,7 @@ public class Diakok extends javax.swing.JFrame {
         button1 = new java.awt.Button();
         label1 = new java.awt.Label();
         varos = new javax.swing.JTextField();
+        visz = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -129,6 +131,7 @@ public class Diakok extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 153, 51));
 
         jLabel1.setText("DIAKOK");
 
@@ -217,6 +220,8 @@ public class Diakok extends javax.swing.JFrame {
 
         label1.setText("Város");
 
+        visz.setText("VISZAJELZÉS");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -232,7 +237,8 @@ public class Diakok extends javax.swing.JFrame {
                                 .addGap(50, 50, 50)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1))))
+                                    .addComponent(jButton1)
+                                    .addComponent(visz))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -320,7 +326,9 @@ public class Diakok extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addGap(45, 45, 45))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(visz)
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -333,21 +341,57 @@ public class Diakok extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int id = 1;
         String n = ForName.getText();
-        int a = Integer.parseInt(diaksz.getText());
+        //int a = Integer.parseInt(diaksz.getText());
         String b = anyu.getText();
         String t = email.getText();
         String d = lak.getText();
-        String f = DateFormat.getDateInstance().format(szül.getDate());
+        //String f = DateFormat.getDateInstance().format(szül.getDate());
         //String f = szül.getDateFormatString();
-
         int v = varosok.getSelectedIndex()+1;
+        SimpleDateFormat formatum;
+        String su;
+        try{
+            formatum = new SimpleDateFormat("yyyy-MM-dd");
+            su = formatum.format(szül.getDate());
+        }
+        catch(Exception e){
+            su="";
+            visz.setText("Rosz dátumformátum");
 
+        }
+        String di =diaksz.getText();
+        long disz=0;
+        boolean diakoke = true;
+        try{
+            disz = Long.parseLong(di);
+        }
+        catch(Exception e){
+            diakoke = false;
+            System.out.println("nem okes");
+            }
+        String[] inputok = {ForName.getText(),diaksz.getText(),anyu.getText(),email.getText(),lak.getText()};
+        boolean urese = false;
+        for(int i=0;i<inputok.length;i++){
+            if (inputok[i].equals(""))
+                urese=true;
+        }
+        if (urese)
+            visz.setText("Van üres mező");
+        else if (!diakoke)
+            visz.setText("A diakok. száma ne szöveg legyen");
+        else if (di.length()<11 || di.length()>11)
+            visz.setText("A diakok. száma pontosan 11 számjegyü legyen");
+        else if (!t.contains("@"))
+            visz.setText("Az email cím formátuma helytelen");
+        else {
+        
+       
         
         try{
             Class.forName("com.mysql.jdbc.Driver");  
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
             Statement smt=con.createStatement();  
-            smt.executeUpdate("INSERT INTO diak(név, diaksz, Anyuka, email, Lakcim, születés,varosid) VALUES('"+n+"','"+a+"','"+b+"','"+t+"','"+d+"','"+f+"','"+v+"')");
+            smt.executeUpdate("INSERT INTO diak(név, diaksz, Anyuka, email, Lakcim, születés,varosid) VALUES('"+n+"','"+di+"','"+b+"','"+t+"','"+d+"','"+su+"','"+v+"')");
             //ResultSet rs=smt.executeQuery("select * from diak");  
             /*while(rs.next())  
             System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  */
@@ -382,11 +426,12 @@ public class Diakok extends javax.swing.JFrame {
            
         }*/Tablatorol(tabla);
         Tablatolt(tabla);
-        
+        visz.setText("Sikeres adatbevitel!");
+
         }
         catch(Exception e){
             System.out.println(e);
-        }
+        }}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -592,5 +637,6 @@ public class Diakok extends javax.swing.JFrame {
     private javax.swing.JTable tabla;
     private javax.swing.JTextField varos;
     private javax.swing.JComboBox<String> varosok;
+    private javax.swing.JLabel visz;
     // End of variables declaration//GEN-END:variables
 }
