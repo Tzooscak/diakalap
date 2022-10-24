@@ -1,3 +1,4 @@
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 public class Diakok extends javax.swing.JFrame {
 
     public Diakok() {
@@ -20,41 +22,37 @@ public class Diakok extends javax.swing.JFrame {
         Tablatolt(tabla);
         varosFeltolt(varosok);
         tabla.setAutoCreateRowSorter(true);
-        
-        tabla.addKeyListener(new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent e)
-			{
-				if(e.getKeyChar()==KeyEvent.VK_ENTER)
-				{
-					 try{
-                                            int c= tabla.getSelectedRow();
-                                            int g= tabla.getSelectedColumn();
-                                            String n= (tabla.getValueAt(c, g)).toString();
-                                            String a = diaksz.getText();
-                                            Class.forName("com.mysql.jdbc.Driver");  
-                                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-                                            Statement smt=con.createStatement();
-                                            DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-                                            int sstam = tabla.getSelectedRow();
-                                            System.out.println(sstam);
-                                            int ertek = Integer.parseInt(String.valueOf(tabla.getValueAt(sstam, 1)));
-                                            smt.executeUpdate("UPDATE diak SET név='"+n+"' WHERE diaksz = '"+a+"'");
-                                            Tablatorol(tabla);
-                                            Tablatolt(tabla);
-                                            ForName.setText(n);
-                                            con.close();
 
-                                            
-                                        }
-                                        catch(Exception b){
-                                            System.out.println(b);
-                                        }
-				}
-			}
-		});
-         
+        tabla.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+                    try {
+                        int c = tabla.getSelectedRow();
+                        int g = tabla.getSelectedColumn();
+                        String n = (tabla.getValueAt(c, g)).toString();
+                        String a = diaksz.getText();
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+                        Statement smt = con.createStatement();
+                        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+                        int sstam = tabla.getSelectedRow();
+                        System.out.println(sstam);
+                        int ertek = Integer.parseInt(String.valueOf(tabla.getValueAt(sstam, 1)));
+                        smt.executeUpdate("UPDATE diak SET név='" + n + "' WHERE diaksz = '" + a + "'");
+                        Tablatorol(tabla);
+                        Tablatolt(tabla);
+                        ForName.setText(n);
+                        con.close();
+
+                    } catch (Exception b) {
+                        System.out.println(b);
+                    }
+                }
+            }
+        });
+
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -347,63 +345,61 @@ public class Diakok extends javax.swing.JFrame {
         String d = lak.getText();
         //String f = DateFormat.getDateInstance().format(szül.getDate());
         //String f = szül.getDateFormatString();
-        int v = varosok.getSelectedIndex()+1;
+        int v = varosok.getSelectedIndex() + 1;
         SimpleDateFormat formatum;
         String su;
-        try{
+        try {
             formatum = new SimpleDateFormat("yyyy-MM-dd");
             su = formatum.format(szül.getDate());
-        }
-        catch(Exception e){
-            su="";
+        } catch (Exception e) {
+            su = "";
             visz.setText("Rosz dátumformátum");
 
         }
-        String di =diaksz.getText();
-        long disz=0;
+        String di = diaksz.getText();
+        long disz = 0;
         boolean diakoke = true;
-        try{
+        try {
             disz = Long.parseLong(di);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             diakoke = false;
             System.out.println("nem okes");
-            }
-        String[] inputok = {ForName.getText(),diaksz.getText(),anyu.getText(),email.getText(),lak.getText()};
-        boolean urese = false;
-        for(int i=0;i<inputok.length;i++){
-            if (inputok[i].equals(""))
-                urese=true;
         }
-        if (urese)
+        String[] inputok = {ForName.getText(), diaksz.getText(), anyu.getText(), email.getText(), lak.getText()};
+        boolean urese = false;
+        for (int i = 0; i < inputok.length; i++) {
+            if (inputok[i].equals("")) {
+                urese = true;
+            }
+        }
+        if (urese) {
             visz.setText("Van üres mező");
-        else if (!diakoke)
+        } else if (!diakoke) {
             visz.setText("A diakok. száma ne szöveg legyen");
-        else if (di.length()<11 || di.length()>11)
+        } else if (di.length() < 11 || di.length() > 11) {
             visz.setText("A diakok. száma pontosan 11 számjegyü legyen");
-        else if (!t.contains("@"))
+        } else if (!t.contains("@")) {
             visz.setText("Az email cím formátuma helytelen");
-        else {
-        
-       
-        
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();  
-            smt.executeUpdate("INSERT INTO diak(név, diaksz, Anyuka, email, Lakcim, születés,varosid) VALUES('"+n+"','"+di+"','"+b+"','"+t+"','"+d+"','"+su+"','"+v+"')");
-            //ResultSet rs=smt.executeQuery("select * from diak");  
-            /*while(rs.next())  
+        } else {
+
+            //asd
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+                Statement smt = con.createStatement();
+                smt.executeUpdate("INSERT INTO diak(név, diaksz, Anyuka, email, Lakcim, születés,varosid) VALUES('" + n + "','" + di + "','" + b + "','" + t + "','" + d + "','" + su + "','" + v + "')");
+                //ResultSet rs=smt.executeQuery("select * from diak");  
+                /*while(rs.next())  
             System.out.println(rs.getInt(1)+"  "+rs.getString(2)+"  "+rs.getString(3));  */
-             
-            ForName.setText("");
-            diaksz.setText("");
-            anyu.setText("");
-            email.setText("");
-            lak.setText("");
-           // szül.setText("");
-            varosok.setSelectedIndex(0);
-            /*DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+
+                ForName.setText("");
+                diaksz.setText("");
+                anyu.setText("");
+                email.setText("");
+                lak.setText("");
+                // szül.setText("");
+                varosok.setSelectedIndex(0);
+                /*DefaultTableModel model = (DefaultTableModel) tabla.getModel();
             int sorszam= model.getRowCount();
             for (int i=0;i<sorszam;i++){
                 model.removeRow(0);
@@ -424,14 +420,15 @@ public class Diakok extends javax.swing.JFrame {
             }
             con.close();
            
-        }*/Tablatorol(tabla);
-        Tablatolt(tabla);
-        visz.setText("Sikeres adatbevitel!");
+        }*/
+                Tablatorol(tabla);
+                Tablatolt(tabla);
+                visz.setText("Sikeres adatbevitel!");
 
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
-        catch(Exception e){
-            System.out.println(e);
-        }}
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -442,45 +439,46 @@ public class Diakok extends javax.swing.JFrame {
         String d = lak.getText();
         String f = DateFormat.getDateInstance().format(szül.getDate());
         System.out.println(f);
-        int v = varosok.getSelectedIndex()+1;
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();
+        int v = varosok.getSelectedIndex() + 1;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+            Statement smt = con.createStatement();
             DefaultTableModel model = (DefaultTableModel) tabla.getModel();
             int sstam = tabla.getSelectedRow();
             System.out.println(sstam);
             int ertek = Integer.parseInt(String.valueOf(tabla.getValueAt(sstam, 1)));
-            smt.executeUpdate("DELETE FROM diak WHERE diaksz = '"+ertek+"'");
+            smt.executeUpdate("DELETE FROM diak WHERE diaksz = '" + ertek + "'");
             Tablatorol(tabla);
             Tablatolt(tabla);
             con.close();
-            
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e){System.out.println(e);}
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void tablaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tablaPropertyChange
-        
+
     }//GEN-LAST:event_tablaPropertyChange
 
     private void tablaInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tablaInputMethodTextChanged
-        
+
     }//GEN-LAST:event_tablaInputMethodTextChanged
 
     private void tablaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaKeyPressed
-        
+
     }//GEN-LAST:event_tablaKeyPressed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
 
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();
-            ResultSet result = smt.executeQuery("SELECT * FROM diak INNER JOIN varos ON diak.varosid = varos.vid WHERE diaksz = '"+tabla.getValueAt(tabla.getSelectedRow(), 1)+"'");
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+            Statement smt = con.createStatement();
+            ResultSet result = smt.executeQuery("SELECT * FROM diak INNER JOIN varos ON diak.varosid = varos.vid WHERE diaksz = '" + tabla.getValueAt(tabla.getSelectedRow(), 1) + "'");
             result.next();
-            
+
             ForName.setText(result.getString("név"));
             diaksz.setText(result.getString("diaksz"));
             anyu.setText(result.getString("Anyuka"));
@@ -488,114 +486,103 @@ public class Diakok extends javax.swing.JFrame {
             lak.setText(result.getString("Lakcim"));
             szül.setDate(result.getDate("születés"));
             varosok.setSelectedItem(result.getString("vnev"));
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e){System.out.println(e);}
-        
+
         /*LocalDate localDate = LocalDate.now();
         Date datum = null;
         datum= Date.valueOf(localDate);
         szül.setDate(datum);*/
-        
+
     }//GEN-LAST:event_tablaMouseClicked
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         Tablatorol(tabla);
         String varoska = varos.getText();
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+            Statement smt = con.createStatement();
             ResultSet result = smt.executeQuery("SELECT * FROM diak INNER JOIN varos ON diak.varosid = varos.vid ");
             DefaultTableModel model = (DefaultTableModel) tabla.getModel();
-            String[] mezon = {"név","diaksz","Anyuka","email","Lakcim","születés","vnev"};
+            String[] mezon = {"név", "diaksz", "Anyuka", "email", "Lakcim", "születés", "vnev"};
             String[] rekord = new String[7];
-                while(result.next())
-                {
-                    if(varoska.equals(result.getString("vnev"))){
-                    for(int i=0;i<mezon.length;i++){
-                        rekord[i]=result.getString(mezon[i]);
+            while (result.next()) {
+                if (varoska.equals(result.getString("vnev"))) {
+                    for (int i = 0; i < mezon.length; i++) {
+                        rekord[i] = result.getString(mezon[i]);
                     }
                     model.addRow(rekord);
-                }else{
-                System.out.println("valami rosz");
+                } else {
+                    System.out.println("valami rosz");
+                }
             }
-            }
-            
+
             con.close();
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e){System.out.println(e);}
     }//GEN-LAST:event_button1ActionPerformed
     //tabla.addPropertyChangeListener("state", new PropertyChangeListener()) {
-    
 
-    
-    
-    
-    public static void Tablatorol(JTable JTable){
-    DefaultTableModel model = (DefaultTableModel) JTable.getModel();
-            int sorszam= model.getRowCount();
-            for (int i=0;i<sorszam;i++){
-                model.removeRow(0);
-            }
+    public static void Tablatorol(JTable JTable) {
+        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        int sorszam = model.getRowCount();
+        for (int i = 0; i < sorszam; i++) {
+            model.removeRow(0);
+        }
     }
-    
-    
-    public static void varosFeltolt(JComboBox belist){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();
+
+    public static void varosFeltolt(JComboBox belist) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+            Statement smt = con.createStatement();
             ResultSet rs = smt.executeQuery("SELECT `vnev` FROM varos ORDER BY vnev");
             ArrayList<String> vok = new ArrayList<String>();
-            while(rs.next())
-            {
+            while (rs.next()) {
                 vok.add(rs.getString("vnev"));
             }
             con.close();
-            for (int i=0;i<vok.size();i++){
+            for (int i = 0; i < vok.size(); i++) {
                 belist.addItem(vok.get(i));
             }
             belist.setSelectedItem("Tatabánya");
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e){System.out.println(e);}
     }
 
-    
-    
-    
-    public static void Tablatolt(JTable JTable){
-        try{
-            Class.forName("com.mysql.jdbc.Driver");  
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok","root","");
-            Statement smt=con.createStatement();
+    public static void Tablatolt(JTable JTable) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/diakok", "root", "");
+            Statement smt = con.createStatement();
             DefaultTableModel model = (DefaultTableModel) JTable.getModel();
             ResultSet rs = smt.executeQuery("SELECT `név`,`diaksz`,`Anyuka`,`email`,`Lakcim`,`születés`,`vnev` FROM `diak` INNER JOIN varos ON diak.varosid = varos.vid");
-            String[] mezon = {"név","diaksz","Anyuka","email","Lakcim","születés","vnev"};
+            String[] mezon = {"név", "diaksz", "Anyuka", "email", "Lakcim", "születés", "vnev"};
             String[] rekord = new String[7];
-            while(rs.next())
-            {
-                for(int i=0;i<mezon.length;i++){
-                    rekord[i]=rs.getString(mezon[i]);
-                    
+            while (rs.next()) {
+                for (int i = 0; i < mezon.length; i++) {
+                    rekord[i] = rs.getString(mezon[i]);
+
                 }
                 model.addRow(rekord);
             }
             con.close();
-            
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch(Exception e){System.out.println(e);}
     }
-    
-    
-    
-    
-    
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Diakok().setVisible(true);
-                
+
             }
         });
     }
